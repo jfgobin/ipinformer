@@ -1,0 +1,9 @@
+TODO
+----
+
+- Clean the code and add comments
+- Use a standard for variable and function names
+- Use a configuration file instead of a static, hardcoded list of malware domain lists
+- Add a support for VirusTotal
+- Add a "-f" flag to report on all IPs, not only on the positive ones
+

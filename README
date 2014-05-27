@@ -1,0 +1,29 @@
+ipinformer
+----------
+
+20140526 - v1.0 - first release
+
+Usage
+
+ipinformer [-v] [-D] [-o <output file>] [-i <input file>] [-g <geoDB country file>]
+
+-v			Displays the version information
+-D			Debug mode, returns some more information about what is happening
+-o <output file>	Specifies the output file (default: ipinformer.csv)
+-i <input file>		Specifies the input file (default: ip.txt)
+-g <geoDB country file>	Specifies the location and name of Maxmind's Geo Country File (default: ./GeoLite2-country.mmdb)
+
+The input file is a list of IPs, one per line. Lines that are not parsed as IPs are ignored. 
+
+The output is a CSV file with: the IP, the country (if the GeoDB is present) and the result of the checks against:
+
+ o abuse.ch Zeus Tracker
+ o abuse.ch SpyEye Tracker
+ o abuse.ch Palevo Tracker
+ o abuse.ch Feodo Tracker (list A)
+ o The Malware Domain List (IP Block list)
+
+If you have any other list you would like to see included, feel free to send me an email at jeanfgobin (at) gmail.com
+
+
+
