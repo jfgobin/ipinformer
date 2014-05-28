@@ -58,43 +58,13 @@ func main() {
 		ipcount, ipmal     int
 		mlpos              int
 	)
-	malwarelists := []mallistentry{
-		{
-			method: "URL",
-			target: "https://zeustracker.abuse.ch/blocklist.php?download=badips",
-			name:   "Abuse.ch Zeus Tracker",
-			sname:  "zeustracker",
-			iplist: nil},
-		{
-			method: "URL",
-			target: "https://spyeyetracker.abuse.ch/blocklist.php?download=ipblocklist",
-			name:   "Abuse.ch SpyEye Tracker",
-			sname:  "spyeyetracker",
-			iplist: nil},
-		{
-			method: "URL",
-			target: "https://palevotracker.abuse.ch/blocklists.php?download=ipblocklist",
-			name:   "Abuse.ch Palevo Tracker",
-			sname:  "palevotracker",
-			iplist: nil},
-		{
-			method: "URL",
-			target: "https://feodotracker.abuse.ch/blocklist/?download=ipblocklist",
-			name:   "Abuse.ch Feodo Tracker",
-			sname:  "feodotracker",
-			iplist: nil},
-		{
-			method: "URL",
-			target: "http://www.malwaredomainlist.com/hostslist/ip.txt",
-			name:   "Malware Domain List",
-			sname:  "mdl",
-			iplist: nil}}
 	flag.Parse()
 	if *vflag {
 		fmt.Printf("ipinformer version %d.%d\n\n", Version_major, Version_minor)
 		fmt.Printf("Packages:\n")
 	}
 	fmt.Printf("Infile: %s, Outfile: %s\n", *inflag, *outflag)
+	malwarelists := Readconfig("ipinformer.cfg",*dflag)
 	/* Load the lists in memory */
 	for i = 0; i < len(malwarelists); i++ {
 		ce = &malwarelists[i]

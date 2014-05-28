@@ -27,32 +27,42 @@
 package main
 
 import (
-	'fmt'
-	'os'
-	'sys'
-	'encoding/json'
+	"fmt"
+	"os"
+	"encoding/json"
 )
 
-/* Defined in ipinformer.go
-type mallistentry struct {
-        method string    /* The method used to access the list */
-        target string    /* The list location */
-        name   string    /* The name of the list */
-        sname  string    /* The short name of the list (for the CSV file) */
-        iplist *[]string /* The IPs in the list */
-*/
 
 func Readconfig(filename string, debug bool) []mallistentry {
-	malwarelist []mallistentry
-	f, err = os.Open(filename)
+	var (
+		malwarelist []mallistentry
+		entry mallistentry
+		item []string
+	)
+	f, err := os.Open(filename)
 	if err != nil {
 		/* Something went wrong */
 		fmt.Printf("ERROR: while opening %s (%s)\nExiting ...\n",filename,err)
-		sys.Exit(-3)
+		os.Exit(-3)
 	}
 	/* We now have a *File, let's pass that to the json reader/decoder */
-	jsonDecoder = json.NewDecoder(f)
-	
-	
+	jsonDecoder := json.NewDecoder(f)
+	/* We will decode the json string (in the file) into a map string -> []string */
+	var m map[string]([]string)
+	err = jsonDecoder.Decode(&m)
+	if err != nil {
+		fmt.Printf("ERROR: decoding json config (%s)\nExiting ...\n",err)
+		f.Close()
+	}
+	for k := range m {
+		item=m[k]
+		entry.method=item[0]
+		entry.target=item[1]
+		entry.name=item[2]
+		entry.sname=k
+		entry.iplist=nil
+		malwarelist = append(malwarelist,entry)
+	}	
+	return malwarelist
 }
 
