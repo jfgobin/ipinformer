@@ -48,6 +48,7 @@ func main() {
 		outflag            = flag.String("o", "ipinformer.csv", "Name the output file")
 		inflag             = flag.String("i", "ip.txt", "Name of the input file")
 		geoflag		   = flag.String("g", "GeoLite2-country.mmdb", "Path and filename of the GeoLocation DB")
+		cfgflag		   = flag.String("f", "ipinformer.cfg", "Path and filename of the configuration file")
 		iplist,csvlist     []string
 		i, j               int
 		ce                 *mallistentry
