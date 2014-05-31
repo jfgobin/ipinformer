@@ -12,6 +12,8 @@ ipinformer [-v] [-D] [-o <output file>] [-i <input file>] [-g <geoDB country fil
 -o <output file>	Specifies the output file (default: ipinformer.csv)
 -i <input file>		Specifies the input file (default: ip.txt)
 -g <geoDB country file>	Specifies the location and name of Maxmind's Geo Country File (default: ./GeoLite2-country.mmdb)
+-vt			Enable VirusTotal information retrieval
+-vtc <config file>	Specifies the VT configuration (default: virustotal.cfg)
 
 The input file is a list of IPs, one per line. Lines that are not parsed as IPs are ignored. 
 
