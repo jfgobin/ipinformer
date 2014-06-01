@@ -25,6 +25,7 @@ import (
 	"os"
 	"encoding/csv"
 	"net"
+	"strconv"
 	"github.com/oschwald/geoip2-golang"
 )
 
@@ -49,6 +50,8 @@ func main() {
 		inflag             = flag.String("i", "ip.txt", "Name of the input file")
 		geoflag		   = flag.String("g", "GeoLite2-country.mmdb", "Path and filename of the GeoLocation DB")
 		cfgflag		   = flag.String("f", "ipinformer.cfg", "Path and filename of the configuration file")
+		vtflag		   = flag.Bool("vt", false, "Enable VirusTotal (requires API key)")
+		vtcflag		   = flag.String("vtc", "virustotal.cfg", "VirusTotal Configuration (contains apikey and delay)")
 		iplist,csvlist     []string
 		i, j               int
 		ce                 *mallistentry
@@ -58,6 +61,8 @@ func main() {
 		lineread, linebyte []byte
 		ipcount, ipmal     int
 		mlpos              int
+		vtPresent,res	   bool
+		vtc		   vtConfig
 	)
 	flag.Parse()
 	if *vflag {
@@ -65,7 +70,7 @@ func main() {
 		fmt.Printf("Packages:\n")
 	}
 	fmt.Printf("Infile: %s, Outfile: %s\n", *inflag, *outflag)
-	malwarelists := Readconfig("ipinformer.cfg",*dflag)
+	malwarelists := Readconfig(*cfgflag,*dflag)
 	/* Load the lists in memory */
 	for i = 0; i < len(malwarelists); i++ {
 		ce = &malwarelists[i]
@@ -115,6 +120,22 @@ func main() {
 	for i=0; i<len(malwarelists); i++ {
 		csvlist = append(csvlist, malwarelists[i].sname)
 	}
+	// VT present?
+	if *vtflag {
+		// Let's try to read the configuration file
+		vtc, res = ReadVTconfig(*vtcflag,*dflag)
+		if res == false {
+			// Reading the configuration failed - let's disable VT
+			fmt.Println("WARNING: cannot enable VirusTotal.")
+			vtPresent=false
+		} else {
+			vtPresent=true
+			csvlist = append(csvlist, "vtUrlKnown")
+			csvlist = append(csvlist, "vtnMalServedFrom")
+			csvlist = append(csvlist, "vtnMalCommWith")
+			csvlist = append(csvlist, "vtResolKnown")
+		}
+	}
 	wcsv.Write(csvlist)
 	wcsv.Flush()
 	errread = nil
@@ -158,6 +179,21 @@ func main() {
 					fmt.Printf("DEBUG: %s is present in at least one list.\n", ip)
 				}
 				ipmal++
+				if vtPresent {
+					vtRes := GetIPinfo(ip,vtc,*dflag)
+					d2 := d+len(malwarelists)
+					if vtRes.urlKnown {
+						csvlist[d2]="Y"
+					} else {
+						csvlist[d2]="N"
+					}
+					d2++
+					csvlist[d2]=strconv.Itoa(vtRes.nMalwareDet)
+					d2++
+					csvlist[d2]=strconv.Itoa(vtRes.nMalwareCom)
+					d2++
+					csvlist[d2]=vtRes.nameKnown
+				}
 				wcsv.Write(csvlist)
 			}
 		}

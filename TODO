@@ -3,6 +3,3 @@ TODO
 
 - Clean the code and add comments
 - Use a standard for variable and function names
-- Add support for VirusTotal
-- Add a "-f" flag to report on all IPs, not only on the positive ones
-- Add a "-c" flag to specify a configuration file instead of imposing a default of "ipinformer.cfg"
